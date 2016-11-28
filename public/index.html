@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app="App">
+<head lang="en">
+    <meta charset="utf-8">
+    <title>AngularJS Lazy Scroll Loading</title>
+    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+    <script src="./js/lazy-scroll-load.js"></script>
+    <script>
+        var app = angular.module('App', ['lazyLoad']);
+
+        app.controller('VerticleApp', function ($scope) {
+
+            $scope.items = [];
+            $scope.canLoad = true;
+            $scope.maxItems = 1000;
+
+            $scope.addItems = function () {
+                for (var i = 0; i < 10; i++) {
+                    $scope.items.push({name:'Image ' + ($scope.items.length + 1), img:'http://pipsum.com/120x120.jpg?s=' + ($scope.items.length*2)});
+
+                    if ($scope.items.length >= $scope.maxItems) {
+                        $scope.canLoad = false;
+                        return;
+                    }
+                }
+            };
+
+            $scope.reset = function () {
+                $scope.items = [];
+                $scope.canLoad = true;
+                $scope.addItems();
+            };
+
+            $scope.reset();
+        })
+    </script>
+    <style type="text/css">
+        body {
+            background-color: #464646;
+            color: #ffffff;
+        }
+        .scroll-loader {
+            background-color: rgba(0,0,0,0.3);
+            height: 500px;
+            border: 0;
+            margin-bottom: 20px;
+            overflow: auto;
+            padding: 10px 0;
+        }
+
+        .scroll-loader li {
+            list-style: none;
+            border-bottom: 2px solid #464646;
+            padding: 5px;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body ng-controller="VerticleApp" attach-to-window="true">
+<div class="container">
+    <div>
+        <h1>AngularJS Lazy Scroll Loading</h1>
+
+        <p>Scroll within the list below to load more items</p>
+
+        <div lazy-load="addItems()" class="scroll-loader" can-load="canLoad" threshold="100">
+            <ul>
+                <li ng-repeat="item in items">
+                <div style="display:inline-block; margin: 10px 15px;"><img src="{{item.img}}" style="vertical-align: top"></div>
+                <div style="display:inline-block; width: 85%; vertical-align: top;"><h4 style="display: inline-block; width: 100%;">{{item.name}}</h4> Lorem ipsum dolor sit amet, mea in corpora senserit, id alii dolore vis. Ne purto prompta has, cu ludus inciderint sed. Ne deleniti indoctum expetenda duo, duo movet doming laboramus ex. Diceret intellegat et ius, at facer verterem nec, qui meis malorum constituto ad. Ad viderer offendit verterem eum, hinc discere at has.</div></li>
+            </ul>
+        </div>
+        <div>Config Threshold: {{maxItems}} items
+            <small>({{items.length}} added)</small>
+        </div>
+    </div>
+</div>
+<div style="width: 100%;text-align: center;">
+        <a href="https://github.com/mnewelski/angularjs-lazy-scroll-loading">View on GitHub.com</a>
+    </div>
+</body>
+</html>
